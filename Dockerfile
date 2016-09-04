@@ -46,11 +46,19 @@ RUN useradd -r -u 200 -m -c "nexus role account" -d ${NEXUS_DATA} -s /bin/false 
 VOLUME ${NEXUS_DATA}
 
 EXPOSE 8081
+
+# Inclui para tentar rodar sem erro
+RUN touch /opt/sonatype/nexus/etc/org.apache.karaf.command.acl.jaas.cfg && \
+    chmod -R a+r /opt/sonatype/nexus && \
+    touch /opt/sonatype/nexus/etc/org.apache.karaf.command.acl.feature.cfg && \
+    chmod a+rw /opt/sonatype/nexus/etc/org.apache.karaf.command.acl.feature.cfg
+
 USER nexus
 WORKDIR /opt/sonatype/nexus
 
 ENV JAVA_MAX_MEM 1200m
 ENV JAVA_MIN_MEM 1200m
 ENV EXTRA_JAVA_OPTS ""
+
 
 CMD bin/nexus run
